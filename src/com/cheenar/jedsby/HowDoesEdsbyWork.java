@@ -1,9 +1,19 @@
 package com.cheenar.jedsby;
 
+import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
+import com.cheenar.jedsby.parse.login.LoginData;
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by admin on 3/25/16.
@@ -13,6 +23,8 @@ public class HowDoesEdsbyWork
 {
 
     public static String cookies = "";
+
+    public static PFetchCryptData data;
 
     public static void main(String[] args)
     {
@@ -27,6 +39,18 @@ public class HowDoesEdsbyWork
         System.out.println();
 
         getFormKey();
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        login(args[0], args[1]);
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        findClasses();
     }
 
     public static void initialRequest()
@@ -112,11 +136,14 @@ public class HowDoesEdsbyWork
 
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line = "";
-            while((line = in.readLine()) != null)
-            {
-                System.out.println(line);
-            }
+            line = in.readLine();
+            System.out.println(line);
             in.close();
+
+             data = gson.fromJson(line, PFetchCryptData.class);
+
+            System.out.println(data.getSlices().getFormKey());
+            System.out.println(data.getSlices().getData().getSauthdata());
 
         }
         catch(Exception e)
@@ -124,5 +151,107 @@ public class HowDoesEdsbyWork
             e.printStackTrace();
         }
     }
+
+    public static void login(String user, String pass)
+    {
+        try
+        {
+            URL url = new URL("https://sdhc.edsby.com/core/login/3472?xds=loginform&editable=true");
+
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("_formkey", data.getSlices().getFormKey());
+            params.put("sauthdata", data.getSlices().getData().getSauthdata());
+            params.put("crypttype", "Plaintext");
+            params.put("login-userid", user);
+            params.put("login-password", pass);
+            params.put("login-host", "sdhc");
+            params.put("remember", "1");
+
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String,Object> param : params.entrySet()) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+            System.out.println(postData.toString());
+            byte[] postDataBytes = postData.toString().getBytes(Charset.forName("UTF-8"));
+
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("POST");
+            http.setRequestProperty("authority", "sdhc.edsby.com");
+            http.setRequestProperty("path", "/core/login/3472?xds=loginform&editable=true");
+            http.setRequestProperty("scheme", "https");
+            http.setRequestProperty("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36");
+            http.setRequestProperty("accept", "*/*");
+            http.setRequestProperty("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+            http.setRequestProperty("content-length", String.valueOf(postDataBytes.length));
+            http.setRequestProperty("accept-encoding", "gzip, deflate");
+            http.setRequestProperty("accept-language", "en-US,en;q=0.8,es;q=0.6");
+            http.setRequestProperty("referer", "https://sdhc.edsby.com");
+            http.setRequestProperty("origin", "https://sdhc.edsby.com");
+            http.setRequestProperty("cookie", cookies);
+            http.setRequestProperty("x-requested-with", "XMLHttpRequest");
+            http.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(http.getOutputStream());
+            wr.write(postDataBytes);
+            wr.flush();
+            wr.close();
+
+            GZIPInputStream in = new GZIPInputStream(http.getInputStream());
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            while((i = in.read()) != -1)
+            {
+                sb.append((char)i);
+            }
+            in.close();
+
+            loginData = gson.fromJson(sb.toString(), LoginData.class);
+            System.out.println(loginData.getSlice().getData().getName());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void findClasses()
+    {
+        try
+        {
+            URL url = new URL("https://sdhc.edsby.com/core/node.json/" + loginData.getUnid() + "?xds=BaseStudent");
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("GET");
+            http.setRequestProperty("path", "/core/node.json/" + loginData.getUnid() + "?xds=BaseStudent");
+            http.setRequestProperty("scheme", "https");
+            http.setRequestProperty("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36");
+            http.setRequestProperty("accept", "*/*");
+            http.setRequestProperty("accept-encoding", "gzip, deflate, sdch");
+            http.setRequestProperty("accept-language", "en-US,en;q=0.8,es;q=0.6");
+            http.setRequestProperty("referer", "https://sdhc.edsby.com/p/BasePublic/3472");
+            http.setRequestProperty("cookie", cookies);
+
+            GZIPInputStream in = new GZIPInputStream(http.getInputStream());
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            while((i = in.read()) != -1)
+            {
+                sb.append((char)i);
+            }
+            in.close();
+
+            System.out.println(sb.toString());
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static Gson gson = new Gson();
+    public static LoginData loginData;
 
 }
