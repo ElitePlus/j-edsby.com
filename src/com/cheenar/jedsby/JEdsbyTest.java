@@ -22,6 +22,8 @@ import java.util.Map;
 public class JEdsbyTest
 {
 
+    public static String HOST_NAME = "sdhc";
+
     public static String cookies = "";
 
     public static PFetchCryptData data;
@@ -40,7 +42,7 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://sdhc.edsby.com", Packet.ERequestMethod.GET);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com", Packet.ERequestMethod.GET);
             packet.setScheme("https");
             packet.setAccept("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
             packet.setUserAgent(JEdsby.USER_AGENT());
@@ -63,7 +65,7 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://sdhc.edsby.com/core/nodetag.json/?nids=3472&timeout=0&_t=" + System.nanoTime(), Packet.ERequestMethod.GET);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/nodetag.json/?nids=3472&timeout=0&_t=" + System.nanoTime(), Packet.ERequestMethod.GET);
             packet.setScheme("https");
             packet.setAccept("application/json, text/javascript, */*; q=0.01");
             packet.setAcceptEncoding("gzip, deflate, sdch");
@@ -84,7 +86,7 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://sdhc.edsby.com/core/node.json/3472?xds=fetchcryptdata&type=Plaintext-LeapLDAP", Packet.ERequestMethod.GET);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/node.json/3472?xds=fetchcryptdata&type=Plaintext-LeapLDAP", Packet.ERequestMethod.GET);
             packet.setScheme("https");
             packet.setAccept("application/json, text/javascript, */*; q=0.01");
             packet.setAcceptEncoding("gzip, deflate, sdch");
@@ -115,12 +117,12 @@ public class JEdsbyTest
             params.put("crypttype", "Plaintext");
             params.put("login-userid", user);
             params.put("login-password", pass);
-            params.put("login-host", "sdhc");
+            params.put("login-host", "" + HOST_NAME + "");
             params.put("remember", "1");
 
             byte[] postDataBytes = Packet.getPostData(params);
 
-            Packet packet = new Packet("https://sdhc.edsby.com/core/login/3472?xds=loginform&editable=true", Packet.ERequestMethod.POST);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/login/3472?xds=loginform&editable=true", Packet.ERequestMethod.POST);
             packet.setScheme("https");
             packet.setAccept("application/json, text/javascript, */*; q=0.01");
             packet.setAcceptEncoding("gzip, deflate, sdch");
@@ -147,7 +149,7 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://sdhc.edsby.com/core/node.json/" + loginData.getUnid() + "?xds=BaseStudent", Packet.ERequestMethod.GET);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/node.json/" + loginData.getUnid() + "?xds=BaseStudent", Packet.ERequestMethod.GET);
             packet.setScheme("https");
             packet.setAccept("*/*");
             packet.setAcceptEncoding("gzip, deflate, sdch");
@@ -238,7 +240,7 @@ public class JEdsbyTest
         {
             String nid = String.valueOf(sc.getNid());
 
-            Packet packet = new Packet("https://sdhc.edsby.com/core/node.json/" + nid + "/94570669/" + nid + "?xds=MyWorkChart&unit=all&student=" + student.getUnid() + "&model=24605448", Packet.ERequestMethod.GET);
+            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/node.json/" + nid + "/94570669/" + nid + "?xds=MyWorkChart&unit=all&student=" + student.getUnid() + "&model=24605448", Packet.ERequestMethod.GET);
             packet.setScheme("https");
             packet.setAccept("application/json, text/javascript, */*; q=0.01");
             packet.setAcceptEncoding("gzip, deflate, sdch");
