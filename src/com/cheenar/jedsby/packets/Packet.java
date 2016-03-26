@@ -94,7 +94,12 @@ public class Packet
     {
         if(responseHeaders != null)
         {
-            GZIPInputStream in = new GZIPInputStream(getHttpURLConnection().getInputStream());
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            setRequestProperties(http);
+            if(getRequestMethod().equals("POST"))
+                writePOST(http);
+
+            GZIPInputStream in = new GZIPInputStream(http.getInputStream());
             int i = 0;
             StringBuilder sb = new StringBuilder();
             while((i = in.read()) != -1)

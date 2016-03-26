@@ -27,6 +27,12 @@ public class DefaultLogin implements Login
     {
     }
 
+    public static void main(String[] args) throws Exception
+    {
+        DefaultLogin lo = new DefaultLogin("", "");
+        lo.executeLogin(args[0], args[1]);
+    }
+
     @Override
     public void executeLogin(String a, String b)
     {
