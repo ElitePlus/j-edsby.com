@@ -1,0 +1,6 @@
+* SDHC -> Any input
+* New request system for getting the information
+* format the post and get data
+* Make a network library that allows me to easily craft those requests without much trouble
+* Convert the BufferedReader to GZIP reader to parse Json
+* Change the parsing engine for the login system to be directly getting the values using JSONObjects
