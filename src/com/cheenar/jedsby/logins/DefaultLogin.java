@@ -28,12 +28,6 @@ public class DefaultLogin implements Login
         executeLogin(a,b);
     }
 
-    public static void main(String[] args)
-    {
-        DefaultLogin log = new DefaultLogin(args[0], args[1]);
-
-    }
-
     @Override
     public void executeLogin(String a, String b)
     {
