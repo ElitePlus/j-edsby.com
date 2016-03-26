@@ -6,6 +6,8 @@ import com.google.gson.JsonParser;
 /**
  * Created by admin on 3/26/16.
  */
+
+//READ FROM BUFFEREDREADER
 public class DataFormEncryption extends Data
 {
 
