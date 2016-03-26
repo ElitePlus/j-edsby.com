@@ -1,5 +1,7 @@
 package com.cheenar.jedsby;
 
+import com.cheenar.jedsby.utils.Logger;
+
 /**
  * @author Cheenar
  * @description JEdsby: contains basic API information.
@@ -28,21 +30,16 @@ public class JEdsby
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36";
     }
 
+    /**
+     * @name HOST_NAME
+     * @description this is the default HOST_NAME that you can feed in, it is for Hillsborough county
+     * @return String.class
+     */
     public static String HOST_NAME()
     {
         return "sdhc";
     }
 
-    public static boolean isDebugMode = true;
-
-    public static void log(String msg)
-    {
-        if(isDebugMode) System.out.println("[JEdsby] " + msg);
-    }
-
-    public static void err(String msg)
-    {
-        if(isDebugMode) System.err.println("[JEdsby-Err] " + msg);
-    }
+    public static Logger logger = new Logger();
 
 }

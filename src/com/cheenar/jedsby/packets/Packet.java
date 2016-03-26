@@ -2,6 +2,7 @@ package com.cheenar.jedsby.packets;
 
 import com.cheenar.cjt.DoubleTuple;
 import com.cheenar.jedsby.JEdsby;
+import com.cheenar.jedsby.utils.Logger;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -135,7 +136,7 @@ public class Packet
         setResponseHeaders(http);
         setHttpURLConnection(http);
 
-        JEdsby.log("sent packet, gathered response headers, http connection open.");
+        JEdsby.logger.log("sent packet, gathered response headers, http connection open.", Logger.LoggingLevel.MESSAGE);
     }
 
     public void stashCookies()

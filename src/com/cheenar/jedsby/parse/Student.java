@@ -11,13 +11,13 @@ public class Student
 {
 
     private String name;
-    private String unid;
+    private String uniqueNumberIdentifier;
     private ArrayList<StudentClass> classes;
 
     public Student(String name, String unid, ArrayList<StudentClass> classes)
     {
         this.name = name;
-        this.unid = unid;
+        this.uniqueNumberIdentifier = unid;
         this.classes = classes;
     }
 
@@ -26,9 +26,9 @@ public class Student
         return name;
     }
 
-    public String getUnid()
+    public String getUniqueNumberIdentifier()
     {
-        return unid;
+        return uniqueNumberIdentifier;
     }
 
     public ArrayList<StudentClass> getClasses()

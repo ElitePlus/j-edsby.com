@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="J-Edsby:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/J-Edsby</output-path>
+    <root id="archive" name="J-Edsby.jar">
+      <element id="module-output" name="J-Edsby" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/gson-2.6.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/CJTuples/CJTuples.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

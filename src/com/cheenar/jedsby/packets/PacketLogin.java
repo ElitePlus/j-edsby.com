@@ -3,6 +3,7 @@ package com.cheenar.jedsby.packets;
 import com.cheenar.jedsby.JEdsby;
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
 import com.cheenar.jedsby.parse.login.LoginData;
+import com.cheenar.jedsby.utils.Logger;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashMap;
@@ -25,7 +26,7 @@ public class PacketLogin extends Packet
 
         if(data == null || user == null || pass == null)
         {
-            JEdsby.err("Packet Login: Data, user, or pass was null");
+            JEdsby.logger.log("Packet Login: Data, user, or pass was null", Logger.LoggingLevel.ERROR);
             throw new Exception("Packet Login: Data, user, or pass was null");
         }
 
@@ -56,6 +57,15 @@ public class PacketLogin extends Packet
         try
         {
             sendPacket();
+
+            String json = getDataFromGZIP().toString();
+
+            if(json.contains("Bad Username or Password"))
+            {
+                JEdsby.logger.log("User name or password was wrong, no login data returned!", Logger.LoggingLevel.EMERGANCY);
+                throw new Exception("user name or pass was incorrect");
+            }
+
             loginData = new Gson().fromJson(getDataFromGZIP().toString(), LoginData.class);
         }
         catch(Exception e)

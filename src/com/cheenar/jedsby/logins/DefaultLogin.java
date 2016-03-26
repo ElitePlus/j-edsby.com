@@ -1,40 +1,44 @@
-package com.cheenar.jedsby;
+package com.cheenar.jedsby.logins;
 
+import com.cheenar.jedsby.JEdsby;
 import com.cheenar.jedsby.packets.*;
 import com.cheenar.jedsby.parse.Student;
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
 import com.cheenar.jedsby.parse.login.LoginData;
 import com.cheenar.jedsby.parse.login.StudentClass;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 /**
  * Created by admin on 3/25/16.
  */
 
-public class JEdsbyTest
+public class DefaultLogin implements Login
 {
 
-    public static String HOST_NAME = "sdhc";
-    public static String cookies = "";
-    public static PFetchCryptData data;
-    private static Gson gson = new Gson();
-    public static LoginData loginData;
-    public static Student student;
+    public String           HOST_NAME = JEdsby.HOST_NAME();
+    public String           cookies = "";
+    public PFetchCryptData  data;
+    public LoginData        loginData;
+    public Student          student;
 
-    public static void main(String[] args)
+    private Gson gson = new Gson();
+
+    public DefaultLogin(String a, String b)
+    {
+    }
+
+    @Override
+    public void executeLogin(String a, String b)
     {
         initialRequest();
         keepAliveBeforeLogin();
         getFormKey();
-        login(args[0], args[1]);
+        login(a,b);
         findClasses();
         parseClassData();
     }
 
-    public static void initialRequest()
+    private void initialRequest()
     {
         try
         {
@@ -43,8 +47,6 @@ public class JEdsbyTest
 
             cookies = packet.getCookies();
 
-            System.out.println(cookies);
-
         }
         catch(Exception e)
         {
@@ -52,7 +54,7 @@ public class JEdsbyTest
         }
     }
 
-    public static void keepAliveBeforeLogin()
+    private void keepAliveBeforeLogin()
     {
         try
         {
@@ -66,7 +68,7 @@ public class JEdsbyTest
         }
     }
 
-    public static void getFormKey()
+    private void getFormKey()
     {
         try
         {
@@ -81,7 +83,7 @@ public class JEdsbyTest
         }
     }
 
-    public static void login(String user, String pass)
+    private void login(String user, String pass)
     {
         try
         {
@@ -95,7 +97,7 @@ public class JEdsbyTest
         }
     }
 
-    public static void findClasses()
+    private void findClasses()
     {
         try
         {
@@ -109,7 +111,7 @@ public class JEdsbyTest
         }
     }
 
-    public static void parseClassData()
+    private void parseClassData()
     {
         try
         {
@@ -120,33 +122,9 @@ public class JEdsbyTest
                 System.out.println(c.getClassData().getDetails().getInfo().getCode());
                 System.out.println("Messages: " + c.getClassData().getDetails().getNews().getMessages());
                 System.out.println("Results: " + c.getClassData().getDetails().getNews().getResults());
-                getGrade(c);
                 System.out.println("Grade: " + c.getGrade());
                 System.out.println();
             }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static void getGrade(StudentClass sc)
-    {
-        try
-        {
-            PacketGatherGrades packet = new PacketGatherGrades(cookies, student, sc);
-            packet.execute();
-
-            StringBuilder sb = packet.getDataFromGZIP();
-
-            JsonObject objs = (JsonObject) new JsonParser().parse(sb.toString());
-            JsonArray slices = objs.getAsJsonArray("slices");
-            JsonObject data = (JsonObject)slices.get(0);
-            JsonObject sliceData = (JsonObject) data.get("data");
-            JsonObject loaddata = (JsonObject)sliceData.get("loaddata");
-
-            sc.setGrade(new String(String.valueOf(loaddata.get("average"))));
         }
         catch(Exception e)
         {

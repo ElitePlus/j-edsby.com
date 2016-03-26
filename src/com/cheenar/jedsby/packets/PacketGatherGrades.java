@@ -13,7 +13,7 @@ public class PacketGatherGrades extends Packet
 
     public PacketGatherGrades(String cook, Student student, StudentClass studentClass)
     {
-        super("https://" + JEdsby.HOST_NAME() + ".edsby.com/core/node.json/" + studentClass.getNid() + "/94570669/" + studentClass.getNid() + "?xds=MyWorkChart&unit=all&student=" + student.getUnid() + "&model=24605448", ERequestMethod.GET);
+        super("https://" + JEdsby.HOST_NAME() + ".edsby.com/core/node.json/" + studentClass.getNid() + "/94570669/" + studentClass.getNid() + "?xds=MyWorkChart&unit=all&student=" + student.getUniqueNumberIdentifier() + "&model=24605448", ERequestMethod.GET);
         setCookies(cook);
     }
 

@@ -5,6 +5,7 @@ import com.cheenar.jedsby.parse.Student;
 import com.cheenar.jedsby.parse.login.LoginData;
 import com.cheenar.jedsby.parse.login.StudentClass;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
@@ -81,6 +82,27 @@ public class PacketAcquireClasses extends Packet
         }
 
         student = new Student(loginData.getSlice().getData().getName(), loginData.getUnid(), studentClasses);
+
+        for(StudentClass sc : student.getClasses())
+        {
+            resolveGrade(sc);
+        }
+    }
+
+    private void resolveGrade(StudentClass sC) throws Exception
+    {
+        PacketGatherGrades packet = new PacketGatherGrades(getCookies(), student, sC);
+        packet.execute();
+
+        StringBuilder sb = packet.getDataFromGZIP();
+
+        JsonObject objs = (JsonObject) new JsonParser().parse(sb.toString());
+        JsonArray slices = objs.getAsJsonArray("slices");
+        JsonObject data = (JsonObject)slices.get(0);
+        JsonObject sliceData = (JsonObject) data.get("data");
+        JsonObject loaddata = (JsonObject)sliceData.get("loaddata");
+
+        sC.setGrade(new String(String.valueOf(loaddata.get("average"))));
     }
 
     public Student getStudent()
