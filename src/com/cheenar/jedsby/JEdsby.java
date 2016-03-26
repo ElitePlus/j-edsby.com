@@ -33,4 +33,16 @@ public class JEdsby
         return "sdhc";
     }
 
+    public static boolean isDebugMode = true;
+
+    public static void log(String msg)
+    {
+        if(isDebugMode) System.out.println("[JEdsby] " + msg);
+    }
+
+    public static void err(String msg)
+    {
+        if(isDebugMode) System.err.println("[JEdsby-Err] " + msg);
+    }
+
 }

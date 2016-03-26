@@ -1,6 +1,7 @@
 package com.cheenar.jedsby.packets;
 
 import com.cheenar.cjt.DoubleTuple;
+import com.cheenar.jedsby.JEdsby;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -43,6 +44,8 @@ public class Packet
 
     private ArrayList<DoubleTuple> responseHeaders;
 
+    private boolean hasExecuted;
+
     public Packet(String url, ERequestMethod requestMethod)
     {
         try
@@ -68,6 +71,8 @@ public class Packet
         this.dataPOST = null;
 
         this.responseHeaders = null;
+
+        this.hasExecuted = false;
     }
 
     public static byte[] getPostData(Map<String, Object> params) throws Exception
@@ -125,13 +130,12 @@ public class Packet
     {
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         setRequestProperties(http);
-
         if(getRequestMethod().equals("POST"))
             writePOST(http);
-
         setResponseHeaders(http);
-
         setHttpURLConnection(http);
+
+        JEdsby.log("sent packet, gathered response headers, http connection open.");
     }
 
     public void stashCookies()
@@ -190,6 +194,7 @@ public class Packet
     public void execute()
     {
         //TODO: Implement something to do in other classes
+        hasExecuted = true;
     }
 
     public ArrayList<DoubleTuple> getResponseHeaders()
@@ -330,5 +335,10 @@ public class Packet
     public void setDataPOST(byte[] dataPOST)
     {
         this.dataPOST = dataPOST;
+    }
+
+    public boolean hasExecuted()
+    {
+        return hasExecuted;
     }
 }

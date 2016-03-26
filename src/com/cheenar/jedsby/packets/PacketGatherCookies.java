@@ -17,6 +17,7 @@ public class PacketGatherCookies extends Packet
     @Override
     public void execute()
     {
+        super.execute();
         setScheme("https");
         setAccept("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         setUserAgent(JEdsby.USER_AGENT());

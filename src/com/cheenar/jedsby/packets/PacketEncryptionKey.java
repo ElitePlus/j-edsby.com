@@ -1,6 +1,8 @@
 package com.cheenar.jedsby.packets;
 
 import com.cheenar.jedsby.JEdsby;
+import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
+import com.google.gson.Gson;
 
 /**
  * @author Cheenar
@@ -8,6 +10,8 @@ import com.cheenar.jedsby.JEdsby;
 
 public class PacketEncryptionKey extends Packet
 {
+
+    private PFetchCryptData encryptionData;
 
     public PacketEncryptionKey(String cook)
     {
@@ -18,6 +22,7 @@ public class PacketEncryptionKey extends Packet
     @Override
     public void execute()
     {
+        super.execute();
         setScheme("https");
         setAccept("application/json, text/javascript, */*; q=0.01");
         setAcceptEncoding("gzip, deflate, sdch");
@@ -27,11 +32,17 @@ public class PacketEncryptionKey extends Packet
         try
         {
             sendPacket();
+            this.encryptionData = new Gson().fromJson(getDataFromBufferedReader(), PFetchCryptData.class);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public PFetchCryptData getEncryptionData()
+    {
+        return this.encryptionData;
     }
 
 }

@@ -18,6 +18,7 @@ public class PacketKeepAlive extends Packet
     @Override
     public void execute()
     {
+        super.execute();
         setScheme("https");
         setAccept("application/json, text/javascript, */*; q=0.01");
         setAcceptEncoding("gzip, deflate, sdch");
