@@ -1,8 +1,11 @@
 package com.cheenar.jedsby;
 
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
+import com.cheenar.jedsby.parse.login.Classes;
 import com.cheenar.jedsby.parse.login.LoginData;
+import com.cheenar.jedsby.parse.login.StudentClass;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -241,6 +244,16 @@ public class HowDoesEdsbyWork
                 sb.append((char)i);
             }
             in.close();
+
+            Classes classes = gson.fromJson(sb.toString(), Classes.class);
+            LinkedTreeMap l = (LinkedTreeMap) classes.getData().getData().getContainer().getClasses().getClassesContainer().getClasses();
+            for(Object s : l.keySet())
+            {
+                System.out.println(l.get(s).toString().replace("/", "DIV"));
+                StudentClass sC = gson.fromJson(l.get(s).toString().replace("/", "DIV"), StudentClass.class);
+                System.out.println(sC.getClassData().getDetails().getCourse());
+                System.out.println(sC.getClassData().getDetails().getInfo().getTeacherName());
+            }
 
             System.out.println(sb.toString());
 
