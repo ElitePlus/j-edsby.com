@@ -1,6 +1,7 @@
 package com.cheenar.jedsby.packets;
 
 import com.cheenar.jedsby.JEdsby;
+import com.cheenar.jedsby.data.DataFormEncryption;
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
 import com.google.gson.Gson;
 
@@ -12,6 +13,8 @@ public class PacketEncryptionKey extends Packet
 {
 
     private PFetchCryptData encryptionData;
+
+    private DataFormEncryption dataFormEncryption;
 
     public PacketEncryptionKey(String cook)
     {

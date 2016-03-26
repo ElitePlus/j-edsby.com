@@ -25,18 +25,18 @@ public class Logger
     public class Log
     {
 
-        private String message;
+        private Object message;
         private LoggingLevel level;
         private long time;
 
-        public Log(String message, LoggingLevel level)
+        public Log(Object message, LoggingLevel level)
         {
             this.message = message;
             this.level = level;
             this.time = System.currentTimeMillis();
         }
 
-        public String getMessage()
+        public Object getMessage()
         {
             return message;
         }
@@ -62,7 +62,7 @@ public class Logger
         WIZARDRY;
     }
 
-    public  void log(String msg, LoggingLevel level)
+    public  void log(Object msg, LoggingLevel level)
     {
         if(isDebugMode)
         {

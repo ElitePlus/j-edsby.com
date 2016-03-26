@@ -1,6 +1,7 @@
 package com.cheenar.jedsby.logins;
 
 import com.cheenar.jedsby.JEdsby;
+import com.cheenar.jedsby.data.DataFormEncryption;
 import com.cheenar.jedsby.packets.*;
 import com.cheenar.jedsby.parse.Student;
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
@@ -25,6 +26,13 @@ public class DefaultLogin implements Login
 
     public DefaultLogin(String a, String b)
     {
+        executeLogin(a,b);
+    }
+
+    public static void main(String[] args)
+    {
+        DefaultLogin log = new DefaultLogin(args[0], args[1]);
+
     }
 
     @Override
@@ -74,6 +82,8 @@ public class DefaultLogin implements Login
         {
             PacketEncryptionKey packet = new PacketEncryptionKey(cookies);
             packet.execute();
+            //TODO: TEMPORARY ONLY TO TEST
+            DataFormEncryption formEncryption = new DataFormEncryption(packet.getDataFromBufferedReader());
             data = packet.getEncryptionData();
 
         }

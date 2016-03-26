@@ -45,6 +45,8 @@ public class Packet
 
     private ArrayList<DoubleTuple> responseHeaders;
 
+    private DataOutputStream outputStream;
+
     private boolean hasExecuted;
 
     public Packet(String url, ERequestMethod requestMethod)
@@ -139,6 +141,11 @@ public class Packet
         JEdsby.logger.log("sent packet, gathered response headers, http connection open.", Logger.LoggingLevel.MESSAGE);
     }
 
+    public void cleanup() throws Exception
+    {
+        if(outputStream != null) outputStream.close();
+    }
+
     public void stashCookies()
     {
         if(responseHeaders != null)
@@ -168,18 +175,18 @@ public class Packet
         http.setRequestProperty("cookie", this.cookies);
         http.setRequestProperty("content-type", this.contentType);
         http.setRequestProperty("content-length", this.contentLength);
+        http.setRequestProperty("connection", "keep-alive");
         http.setDoOutput(true);
     }
 
     private void writePOST(HttpURLConnection http) throws Exception
     {
-        DataOutputStream wr = new DataOutputStream(http.getOutputStream());
+        outputStream = new DataOutputStream(http.getOutputStream());
         if(dataPOST != null)
-            wr.write(this.dataPOST);
+            outputStream.write(this.dataPOST);
         else
             throw new Exception("POST DATA is null");
-        wr.flush();
-        wr.close();
+        outputStream.flush();
     }
 
     private void setResponseHeaders(HttpURLConnection http)
