@@ -98,13 +98,10 @@ public class Packet
     {
         if(responseHeaders != null)
         {
-<<<<<<< HEAD
             //this is a weird hack
             //I don't know why it works
             //but it does.
             //thanks.
-=======
->>>>>>> ba009ad525733a694aede4690fd6f58bf7728d4b
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             setRequestProperties(http);
             if(getRequestMethod().equals("POST"))
