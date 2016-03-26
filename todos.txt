@@ -2,3 +2,5 @@
 * Acquire the newsfeed
 * Acquire the mailbox
 * Send a message in the mailbox
+* Refactor the requests so that way its easier to create them and parse
+* ORganize the data handling
