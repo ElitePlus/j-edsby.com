@@ -1,9 +1,9 @@
 package com.cheenar.jedsby.packets;
 
 import com.cheenar.jedsby.JEdsby;
-import com.cheenar.jedsby.parse.Student;
-import com.cheenar.jedsby.parse.login.LoginData;
-import com.cheenar.jedsby.parse.login.StudentClass;
+import com.cheenar.jedsby.data.DataLogin;
+import com.cheenar.jedsby.data.DataStudentClass;
+import com.cheenar.jedsby.resources.Student;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -19,12 +19,12 @@ public class PacketAcquireClasses extends Packet
 {
 
     private Student student;
-    private ArrayList<StudentClass> studentClasses;
-    private LoginData loginData;
+    private ArrayList<DataStudentClass> studentClasses;
+    private DataLogin loginData;
 
-    public PacketAcquireClasses(String cook, LoginData loginData)
+    public PacketAcquireClasses(String cook, DataLogin loginData)
     {
-        super("https://" + JEdsby.HOST_NAME() + ".edsby.com/core/node.json/" + loginData.getUnid() + "?xds=BaseStudent", Packet.ERequestMethod.GET);
+        super("https://" + JEdsby.HOST_NAME() + ".edsby.com/core/node.json/" + loginData.getUniqueStudentIdentifier() + "?xds=BaseStudent", Packet.ERequestMethod.GET);
         setCookies(cook);
 
         this.loginData = loginData;
@@ -77,19 +77,19 @@ public class PacketAcquireClasses extends Packet
         studentClasses = new ArrayList<>();
         for(int k = 0; k < classRids.size(); k++)
         {
-            StudentClass sC = new Gson().fromJson(clazzes.get(classRids.get(k)), StudentClass.class);
+            DataStudentClass sC = new DataStudentClass(clazzes.get(classRids.get(k)).toString());
             studentClasses.add(sC);
         }
 
-        student = new Student(loginData.getSlice().getData().getName(), loginData.getUnid(), studentClasses);
+        student = new Student(loginData.getName(), loginData.getUniqueStudentIdentifier(), studentClasses);
 
-        for(StudentClass sc : student.getClasses())
+        for(DataStudentClass sc : student.getClasses())
         {
             resolveGrade(sc);
         }
     }
 
-    private void resolveGrade(StudentClass sC) throws Exception
+    private void resolveGrade(DataStudentClass sC) throws Exception
     {
         PacketGatherGrades packet = new PacketGatherGrades(getCookies(), student, sC);
         packet.execute();
@@ -110,7 +110,7 @@ public class PacketAcquireClasses extends Packet
         return student;
     }
 
-    public ArrayList<StudentClass> getStudentClasses()
+    public ArrayList<DataStudentClass> getStudentClasses()
     {
         return studentClasses;
     }

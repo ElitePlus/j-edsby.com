@@ -49,6 +49,8 @@ public class Packet
 
     private boolean hasExecuted;
 
+    private String jsonData;
+
     public Packet(String url, ERequestMethod requestMethod)
     {
         try
@@ -96,7 +98,16 @@ public class Packet
     {
         if(responseHeaders != null)
         {
-            GZIPInputStream in = new GZIPInputStream(getHttpURLConnection().getInputStream());
+            //this is a weird hack
+            //I don't know why it works
+            //but it does.
+            //thanks.
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            setRequestProperties(http);
+            if(getRequestMethod().equals("POST"))
+                writePOST(http);
+
+            GZIPInputStream in = new GZIPInputStream(http.getInputStream());
             int i = 0;
             StringBuilder sb = new StringBuilder();
             while((i = in.read()) != -1)
@@ -137,6 +148,11 @@ public class Packet
             writePOST(http);
         setResponseHeaders(http);
         setHttpURLConnection(http);
+
+        if(getRequestMethod().equals("POST"))
+            jsonData = getDataFromGZIP().toString();
+
+        cleanup();
 
         JEdsby.logger.log("sent packet, gathered response headers, http connection open.", Logger.LoggingLevel.MESSAGE);
     }
@@ -349,4 +365,15 @@ public class Packet
     {
         return hasExecuted;
     }
+
+    public String getJsonData()
+    {
+        if(getRequestMethod().equals("POST"))
+        {
+            return jsonData;
+        }
+        else
+            return "";
+    }
+
 }

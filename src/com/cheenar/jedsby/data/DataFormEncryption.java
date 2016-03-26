@@ -1,7 +1,5 @@
 package com.cheenar.jedsby.data;
 
-import com.cheenar.jedsby.JEdsby;
-import com.cheenar.jedsby.utils.Logger;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -20,22 +18,51 @@ public class DataFormEncryption extends Data
 
     public DataFormEncryption(String json) throws Exception
     {
-        if(json == null || json.equals(""))
-        {
-            JEdsby.logger.log("Invalid JSON Entered into DataFormEncryption", Logger.LoggingLevel.ERROR);
-            throw new Exception("Invalid JSON");
-        }
-
-        parse(json);
+        super(json);
     }
 
     @Override
     public void parse(String json) throws Exception
     {
         JsonObject baseFile = (JsonObject) new JsonParser().parse(json);
+        JsonObject slicesData = (JsonObject) baseFile.getAsJsonArray("slices").get(0);
+        JsonObject data = (JsonObject) slicesData.get("data");
+
         this.compiled = baseFile.get("compiled").getAsString();
         this.unid = baseFile.get("unid").getAsLong();
-        JEdsby.logger.log(this.unid, Logger.LoggingLevel.MESSAGE);
+        this.formKey = slicesData.get("_formkey").getAsString();
+        this.nid = slicesData.get("nid").getAsLong();
+        this.version = slicesData.get("version").getAsString();
+        this.sauthdata = data.get("sauthdata").getAsString();
     }
 
+    public String getCompiled()
+    {
+        return compiled;
+    }
+
+    public long getUnid()
+    {
+        return unid;
+    }
+
+    public long getNid()
+    {
+        return nid;
+    }
+
+    public String getFormKey()
+    {
+        return formKey;
+    }
+
+    public String getVersion()
+    {
+        return version;
+    }
+
+    public String getStudentAuthData()
+    {
+        return sauthdata;
+    }
 }

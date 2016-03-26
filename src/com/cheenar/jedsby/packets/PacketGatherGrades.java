@@ -1,8 +1,8 @@
 package com.cheenar.jedsby.packets;
 
 import com.cheenar.jedsby.JEdsby;
-import com.cheenar.jedsby.parse.Student;
-import com.cheenar.jedsby.parse.login.StudentClass;
+import com.cheenar.jedsby.data.DataStudentClass;
+import com.cheenar.jedsby.resources.Student;
 
 /**
  * @author Cheenar
@@ -11,7 +11,7 @@ import com.cheenar.jedsby.parse.login.StudentClass;
 public class PacketGatherGrades extends Packet
 {
 
-    public PacketGatherGrades(String cook, Student student, StudentClass studentClass)
+    public PacketGatherGrades(String cook, Student student, DataStudentClass studentClass)
     {
         super("https://" + JEdsby.HOST_NAME() + ".edsby.com/core/node.json/" + studentClass.getNid() + "/94570669/" + studentClass.getNid() + "?xds=MyWorkChart&unit=all&student=" + student.getUniqueNumberIdentifier() + "&model=24605448", ERequestMethod.GET);
         setCookies(cook);

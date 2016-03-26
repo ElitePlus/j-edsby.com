@@ -1,6 +1,6 @@
-package com.cheenar.jedsby.parse;
+package com.cheenar.jedsby.resources;
 
-import com.cheenar.jedsby.parse.login.StudentClass;
+import com.cheenar.jedsby.data.DataStudentClass;
 
 import java.util.ArrayList;
 
@@ -12,9 +12,9 @@ public class Student
 
     private String name;
     private String uniqueNumberIdentifier;
-    private ArrayList<StudentClass> classes;
+    private ArrayList<DataStudentClass> classes;
 
-    public Student(String name, String unid, ArrayList<StudentClass> classes)
+    public Student(String name, String unid, ArrayList<DataStudentClass> classes)
     {
         this.name = name;
         this.uniqueNumberIdentifier = unid;
@@ -31,7 +31,7 @@ public class Student
         return uniqueNumberIdentifier;
     }
 
-    public ArrayList<StudentClass> getClasses()
+    public ArrayList<DataStudentClass> getClasses()
     {
         return classes;
     }

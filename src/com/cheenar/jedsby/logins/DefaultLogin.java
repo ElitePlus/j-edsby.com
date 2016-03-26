@@ -2,11 +2,10 @@ package com.cheenar.jedsby.logins;
 
 import com.cheenar.jedsby.JEdsby;
 import com.cheenar.jedsby.data.DataFormEncryption;
+import com.cheenar.jedsby.data.DataLogin;
+import com.cheenar.jedsby.data.DataStudentClass;
 import com.cheenar.jedsby.packets.*;
-import com.cheenar.jedsby.parse.Student;
-import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
-import com.cheenar.jedsby.parse.login.LoginData;
-import com.cheenar.jedsby.parse.login.StudentClass;
+import com.cheenar.jedsby.resources.Student;
 import com.google.gson.Gson;
 
 /**
@@ -18,9 +17,9 @@ public class DefaultLogin implements Login
 
     public String           HOST_NAME = JEdsby.HOST_NAME();
     public String           cookies = "";
-    public PFetchCryptData  data;
-    public LoginData        loginData;
+    public DataLogin loginData;
     public Student          student;
+    public DataFormEncryption formEncryption;
 
     private Gson gson = new Gson();
 
@@ -82,9 +81,7 @@ public class DefaultLogin implements Login
         {
             PacketEncryptionKey packet = new PacketEncryptionKey(cookies);
             packet.execute();
-            //TODO: TEMPORARY ONLY TO TEST
-            DataFormEncryption formEncryption = new DataFormEncryption(packet.getDataFromBufferedReader());
-            data = packet.getEncryptionData();
+            formEncryption = new DataFormEncryption(packet.getDataFromBufferedReader());
 
         }
         catch(Exception e)
@@ -97,9 +94,9 @@ public class DefaultLogin implements Login
     {
         try
         {
-            PacketLogin packet = new PacketLogin(cookies, data, user, pass);
+            PacketLogin packet = new PacketLogin(cookies, formEncryption, user, pass);
             packet.execute();
-            loginData = packet.getLoginData();
+            loginData = new DataLogin(packet.getDataFromGZIP().toString());
         }
         catch(Exception e)
         {
@@ -125,13 +122,12 @@ public class DefaultLogin implements Login
     {
         try
         {
-            for(StudentClass c : student.getClasses())
+            for(DataStudentClass c : student.getClasses())
             {
-                System.out.println(c.getClassData().getDetails().getCourse() + ": " + c.getNid());
-                System.out.println(c.getClassData().getDetails().getInfo().getTeacherName());
-                System.out.println(c.getClassData().getDetails().getInfo().getCode());
-                System.out.println("Messages: " + c.getClassData().getDetails().getNews().getMessages());
-                System.out.println("Results: " + c.getClassData().getDetails().getNews().getResults());
+                System.out.println(c.getCourseName() + ": " + c.getNid());
+                System.out.println(c.getTeacherName());
+                System.out.println("Messages: " + c.getNewMessages());
+                System.out.println("Results: " + c.getNewResults());
                 System.out.println("Grade: " + c.getGrade());
                 System.out.println();
             }

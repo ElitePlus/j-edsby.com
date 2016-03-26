@@ -2,8 +2,6 @@ package com.cheenar.jedsby.packets;
 
 import com.cheenar.jedsby.JEdsby;
 import com.cheenar.jedsby.data.DataFormEncryption;
-import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
-import com.google.gson.Gson;
 
 /**
  * @author Cheenar
@@ -11,8 +9,6 @@ import com.google.gson.Gson;
 
 public class PacketEncryptionKey extends Packet
 {
-
-    private PFetchCryptData encryptionData;
 
     private DataFormEncryption dataFormEncryption;
 
@@ -35,17 +31,12 @@ public class PacketEncryptionKey extends Packet
         try
         {
             sendPacket();
-            this.encryptionData = new Gson().fromJson(getDataFromBufferedReader(), PFetchCryptData.class);
+            dataFormEncryption = new DataFormEncryption(getDataFromBufferedReader());
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-    }
-
-    public PFetchCryptData getEncryptionData()
-    {
-        return this.encryptionData;
     }
 
 }
