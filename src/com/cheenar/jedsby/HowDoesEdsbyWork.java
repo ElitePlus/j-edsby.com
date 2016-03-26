@@ -65,6 +65,10 @@ public class HowDoesEdsbyWork
         System.out.println();
 
         parseClassData();
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
     }
 
     public static void initialRequest()
@@ -306,12 +310,55 @@ public class HowDoesEdsbyWork
         {
             for(StudentClass c : student.getClasses())
             {
-                System.out.println(c.getClassData().getDetails().getCourse());
+                System.out.println(c.getClassData().getDetails().getCourse() + ": " + c.getNid());
                 System.out.println(c.getClassData().getDetails().getInfo().getTeacherName());
                 System.out.println(c.getClassData().getDetails().getInfo().getCode());
                 System.out.println("Messages: " + c.getClassData().getDetails().getNews().getMessages());
+                System.out.println("Results: " + c.getClassData().getDetails().getNews().getResults());
+                getGrade(c);
+                System.out.println("Grade: " + c.getGrade());
                 System.out.println();
             }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getGrade(StudentClass sc)
+    {
+        try
+        {
+            String nid = String.valueOf(sc.getNid());
+
+            URL url = new URL("https://sdhc.edsby.com/core/node.json/" + nid + "/94570669/" + nid + "?xds=MyWorkChart&unit=all&student=" + student.getUnid() + "&model=24605448");
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("GET");
+            http.setRequestProperty("scheme", "https");
+            http.setRequestProperty("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36");
+            http.setRequestProperty("accept", "application/json, text/javascript, */*; q=0.01");
+            http.setRequestProperty("accept-encoding", "gzip, deflate, sdch");
+            http.setRequestProperty("accept-language", "en-US,en;q=0.8,es;q=0.6");
+            http.setRequestProperty("referer", "https://sdhc.edsby.com/p/BasePublic/3472");
+            http.setRequestProperty("cookie", cookies);
+
+            GZIPInputStream in = new GZIPInputStream(http.getInputStream());
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            while((i = in.read()) != -1)
+            {
+                sb.append((char)i);
+            }
+            in.close();
+
+            JsonObject objs = (JsonObject) new JsonParser().parse(sb.toString());
+            JsonArray slices = objs.getAsJsonArray("slices");
+            JsonObject data = (JsonObject)slices.get(0);
+            JsonObject sliceData = (JsonObject) data.get("data");
+            JsonObject loaddata = (JsonObject)sliceData.get("loaddata");
+
+            sc.setGrade(new String(String.valueOf(loaddata.get("average"))));
         }
         catch(Exception e)
         {
