@@ -1,6 +1,9 @@
 package com.cheenar.jedsby;
 
 import com.cheenar.jedsby.packets.Packet;
+import com.cheenar.jedsby.packets.PacketEncryptionKey;
+import com.cheenar.jedsby.packets.PacketGatherCookies;
+import com.cheenar.jedsby.packets.PacketKeepAlive;
 import com.cheenar.jedsby.parse.Student;
 import com.cheenar.jedsby.parse.encryption.PFetchCryptData;
 import com.cheenar.jedsby.parse.login.LoginData;
@@ -42,13 +45,8 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com", Packet.ERequestMethod.GET);
-            packet.setScheme("https");
-            packet.setAccept("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            packet.setUserAgent(JEdsby.USER_AGENT());
-
-            packet.sendPacket();
-            packet.stashCookies();
+            PacketGatherCookies packet = new PacketGatherCookies();
+            packet.execute();
 
             cookies = packet.getCookies();
 
@@ -65,15 +63,8 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/nodetag.json/?nids=3472&timeout=0&_t=" + System.nanoTime(), Packet.ERequestMethod.GET);
-            packet.setScheme("https");
-            packet.setAccept("application/json, text/javascript, */*; q=0.01");
-            packet.setAcceptEncoding("gzip, deflate, sdch");
-            packet.setAcceptLanguage("en-US,en;q=0.8,es;q=0.6");
-            packet.setCookies(cookies);
-            packet.setUserAgent(JEdsby.USER_AGENT());
-
-            packet.sendPacket();
+            PacketKeepAlive packet = new PacketKeepAlive(cookies);
+            packet.execute();
 
         }
         catch(Exception e)
@@ -86,15 +77,8 @@ public class JEdsbyTest
     {
         try
         {
-            Packet packet = new Packet("https://" + HOST_NAME + ".edsby.com/core/node.json/3472?xds=fetchcryptdata&type=Plaintext-LeapLDAP", Packet.ERequestMethod.GET);
-            packet.setScheme("https");
-            packet.setAccept("application/json, text/javascript, */*; q=0.01");
-            packet.setAcceptEncoding("gzip, deflate, sdch");
-            packet.setAcceptLanguage("en-US,en;q=0.8,es;q=0.6");
-            packet.setCookies(cookies);
-            packet.setUserAgent(JEdsby.USER_AGENT());
-
-            packet.sendPacket();
+            PacketEncryptionKey packet = new PacketEncryptionKey(cookies);
+            packet.execute();
 
             String line = packet.getDataFromBufferedReader();
 

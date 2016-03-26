@@ -100,7 +100,7 @@ public class Packet
         }
         else
         {
-            throw new Exception("Response is not complete");
+            throw new Exception("Response headers are not complete, make sure you did Packet.execute()");
         }
     }
 
@@ -117,7 +117,7 @@ public class Packet
         }
         else
         {
-            throw new Exception("Response is not complete");
+            throw new Exception("Response headers are not complete, make sure you did Packet.execute()");
         }
     }
 
@@ -185,6 +185,11 @@ public class Packet
         {
             responseHeaders.add(new DoubleTuple<String, String>(header, http.getHeaderField(i)));
         }
+    }
+
+    public void execute()
+    {
+        //TODO: Implement something to do in other classes
     }
 
     public ArrayList<DoubleTuple> getResponseHeaders()
