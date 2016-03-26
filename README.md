@@ -33,9 +33,13 @@ When reading data from either BufferedReader or GZIPInputStream
 	packet.getDataFromGZIP();
 	
 ####Using the API
-Currently the test class shows you how to create all the requests by hand (problem!) and how to use that data a little. 
+~~Currently the test class shows you how to create all the requests by hand (problem!) and how to use that data a little.~~
 
-However that isn't very nice is it, having to handle all the requests yourself. In a future update, the API will handle all the login functionality and requests away from the user. 
+~~However that isn't very nice is it, having to handle all the requests yourself. In a future update, the API will handle all the login functionality and requests away from the user.~~ 
+
+<b>The future is now!</b> I have changed the packet and data handling system so it won't require intimate knowledge of the API. 
+
+You can still use the default `Packet.java` class to craft all your requests if you want (such as if you wanted to extend the functionality of the API beyond its currently limitations). However, now all the functionality for logging in, storing cookies, and setting up the basic 
 
 ##Use Cases
 Currently I have been using the API to access my grade data. Using the JavaMAIL API I was able to make a simple program that checks the time of day and if it was `06:00` to send myself an e-mail and a text-message on my cellular phone alerting me if my grades had changed at all.
