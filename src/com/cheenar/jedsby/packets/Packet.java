@@ -132,6 +132,7 @@ public class Packet
             line = in.readLine();
             System.out.println(line);
             in.close();
+
             return line;
         }
         else
